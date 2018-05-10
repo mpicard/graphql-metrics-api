@@ -9,16 +9,13 @@ const insertIntoOperation = `insert into operation (query, name) values
  */
 export class Operations {
 
-  static allOperations() {
+  static init() {
     return db
-      .query(`select * from operation order by name, query;`)
-      .then(res => res.rows);
-  }
-
-  static get(id) {
-    return db
-      .query('select * from operation where id = $1 limit 1;', [id])
-      .then(res => res.rows[0]);
+      .query(`create table if not exists operation (
+                id    uuid primary key default uuid_generate_v4(),
+                query text unique not null,
+                name  text
+              );`);
   }
 
   static create({ query, operationName, extensions }) {
@@ -36,44 +33,6 @@ export class Operations {
           throw err;
         }
       });
-  }
-
-  // static currentRPM(operationId) {
-  //   return db
-  //     .query(`select distinct date_trunc('minute', start_time) as min,
-  //               count(*) over (partition by date_trunc('minute', start_time)) as rpm
-  //               from trace
-  //               where operation_id = $1 and start_time > now() - interval '1 min'
-  //               order by 1 desc
-  //               limit 1;`, [operationId])
-  //     .then(res => res.rows)
-  //     .then(res => res.length ? res[0].rpm : 0);
-  // }
-
-  static averageRPM(operationId) {
-    return db
-      .query(`select round(avg(rpm), 2) from (select distinct
-              date_trunc('minute', start_time), count(*) over (
-              partition by date_trunc('minute', start_time)) as rpm
-              from trace where operation_id = $1) as avg`, [operationId])
-      .then(res => res.rows[0].round)
-      .then(res => res ? res : 0);
-  }
-
-  static averageResponse(operationId) {
-    return db
-      .query(`select round(avg(duration)) from trace where operation_id = $1`, [operationId])
-      .then(res => res.rows[0].round)
-      .then(res => res ? res : 0);
-  }
-
-  static init() {
-    return db
-      .query(`create table if not exists operation (
-                id    uuid primary key default uuid_generate_v4(),
-                query text unique not null,
-                name  text
-              );`);
   }
 
 }
