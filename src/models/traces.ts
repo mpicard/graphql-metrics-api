@@ -5,14 +5,14 @@ export class Traces {
   static init() {
     return db
       .query(`create table if not exists trace (
-                  id uuid primary key default uuid_generate_v4(),
-                  operation_id uuid references operation(id),
-                  version    smallint not null,
-                  start_time timestamp with time zone not null,
-                  end_time   timestamp with time zone not null,
-                  duration   integer not null,
-                  resolvers  jsonb
-                );`)
+                id           uuid primary key default uuid_generate_v4(),
+                operation_id uuid references operation(id),
+                version      smallint not null,
+                start_time   timestamp with time zone not null,
+                end_time     timestamp with time zone not null,
+                duration     integer not null,
+                resolvers    jsonb
+              );`)
       .then(() => db.query(`create index if not exists trace_operation_id_idx
                               on trace(operation_id);`))
       .then(() => db.query(`create index if not exists trace_resolvers_idx

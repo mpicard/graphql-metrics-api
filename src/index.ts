@@ -11,7 +11,7 @@ app.use(express.json());
 app.post('/api/metrics', processMetric);
 
 app.listen(8000, () => {
-  console.log('API started http://localhost:8000/');
+  console.log('Metrics API started http://localhost:8000/');
 
   db.connect()
     .then(() => db.query(`create extension if not exists "uuid-ossp";`))
