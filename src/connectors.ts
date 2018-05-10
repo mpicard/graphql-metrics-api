@@ -1,3 +1,3 @@
 import { Pool } from 'pg';
 
-export const pg = new Pool();
+export const db = new Pool();
