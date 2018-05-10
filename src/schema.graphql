@@ -1,19 +1,21 @@
 type Query {
   allOperations: [Operation]
-  operation(id: String!): Operation
-  trace(id: String!): Trace
+  operation(id: ID!): Operation
+  trace(id: ID!): Trace
+  schema: Schema
 }
 
 type Operation {
-  id: String
+  id: ID
   name: String
   query: String
+  averageRequestsPerMinute: Float
+  averageResponseTime: Float
   traces: [Trace]
-  # schema: Schema # TODO
 }
 
 type Trace {
-  id: String
+  id: ID
   version: Int
   startTime: String
   endTime: String
@@ -28,4 +30,14 @@ type Resolver {
   path: [String]
   duration: Int
   startOffset: Int
+}
+
+type Schema {
+  types: [Type]
+}
+
+type Type {
+  name: String
+  field: String
+  returnType: String
 }
