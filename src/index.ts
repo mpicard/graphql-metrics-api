@@ -1,12 +1,15 @@
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
+import * as cors from 'cors';
 import * as express from 'express';
 
 import { processMetric } from './api';
 import { db } from './connectors';
-import { Operations, Resolvers, Schemas, Traces } from './models';
+import { Operations, Traces } from './models';
 import { schema } from './schema';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
@@ -23,8 +26,6 @@ app.listen(8000, () => {
     .then(() => db.query(`create extension if not exists "uuid-ossp";`))
     .then(() => Operations.init())
     .then(() => Traces.init())
-    .then(() => Resolvers.init())
-    .then(() => Schemas.init())
     .catch(err => {
       console.error("pg err:", err);
       process.exit(1);

@@ -38,19 +38,7 @@ export class Operations {
       });
   }
 
-  // static currentRPM(operationId) {
-  //   return db
-  //     .query(`select distinct date_trunc('minute', start_time) as min,
-  //               count(*) over (partition by date_trunc('minute', start_time)) as rpm
-  //               from trace
-  //               where operation_id = $1 and start_time > now() - interval '1 min'
-  //               order by 1 desc
-  //               limit 1;`, [operationId])
-  //     .then(res => res.rows)
-  //     .then(res => res.length ? res[0].rpm : 0);
-  // }
-
-  static averageRPM(operationId) {
+  static avgRpm(operationId) {
     return db
       .query(`select round(avg(rpm), 2) from (select distinct
               date_trunc('minute', start_time), count(*) over (
@@ -60,7 +48,7 @@ export class Operations {
       .then(res => res ? res : 0);
   }
 
-  static averageResponse(operationId) {
+  static avgDuration(operationId) {
     return db
       .query(`select round(avg(duration)) from trace where operation_id = $1`, [operationId])
       .then(res => res.rows[0].round)

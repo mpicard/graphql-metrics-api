@@ -15,9 +15,10 @@ export function processMetric(req, res, next) {
 
   // clean up query to remove sensitive data from parameters
   query = query.replace(/(\:.*?)(?=\,)|(\:.*?)(?=\))/g, '');
-
+  // make identical queries formatted the same way
+  query = query.replace(/(\b)/gm, ' $1 ');
   // remove redundant whitespace
-  query = query.replace(/\s+/g, ' ').trim();
+  query = query.replace(/\s+/gm, ' ').trim();
 
   if (query.match(/^query IntrospectionQuery/)) {
     // You could store this but I'm not interested in the
