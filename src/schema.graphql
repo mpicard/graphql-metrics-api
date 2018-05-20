@@ -1,7 +1,15 @@
 type Query {
   allOperations: [Operation]
   operation(id: ID!): Operation
+  allTypes: [Type]
   trace(id: ID!): Trace
+}
+
+type Type {
+  id: ID
+  name: String
+  field: String
+  returnType: String
 }
 
 type Operation {
