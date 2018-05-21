@@ -4,7 +4,7 @@ import * as express from 'express';
 
 import { processMetric } from './api';
 import { db } from './connectors';
-import { Operations, Traces, Types } from './models';
+import { Operations, Resolvers, Traces } from './models';
 import { schema } from './schema';
 
 const app = express();
@@ -26,7 +26,7 @@ app.listen(8000, () => {
     .then(() => db.query(`create extension if not exists "uuid-ossp";`))
     .then(() => Operations.init())
     .then(() => Traces.init())
-    .then(() => Types.init())
+    .then(() => Resolvers.init())
     .catch(err => {
       console.error('pg error:', err);
       process.exit(1);

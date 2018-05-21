@@ -6,10 +6,11 @@ type Query {
 }
 
 type Type {
-  id: ID
-  name: String
-  field: String
+  key: ID
+  parentType: String
+  fieldName: String
   returnType: String
+  usage: Float
 }
 
 type Operation {

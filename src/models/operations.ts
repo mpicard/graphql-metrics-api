@@ -67,10 +67,11 @@ export class Operations {
   }
 
   static init() {
-    return db.query(`create table if not exists operation (
-                      id    uuid primary key default uuid_generate_v4(),
-                      query text unique not null,
-                      name  text
-                    );`);
+    return db.query(`
+      create table if not exists operation (
+        id    uuid primary key default uuid_generate_v4(),
+        query text unique not null,
+        name  text
+      );`);
   }
 }

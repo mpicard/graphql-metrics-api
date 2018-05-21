@@ -1,26 +1,27 @@
 import { db } from '../connectors';
 
+/**
+ * Aggregate view of all types found in resolvers in traces
+ */
 export class Types {
-  static init() {
-    db.query(`create or replace view type as (
-                select md5(row(name, field)::text) as id,
-                       name,
-                       field,
-                       return_type
-                from (
-                  select r->>'parentType' as name,
-                         r->>'fieldName' as field,
-                         r->>'returnType' as return_type
-                  from trace
-                  cross join jsonb_array_elements(resolvers)
-                  with ordinality as elements(r, idx)
-                  group by 1, 2, 3
-                  order by 1, 2, 3
-                ) x
-              );`);
-  }
-
   static allTypes() {
-    return db.query(`select * from type;`).then(res => res.rows);
+    return db
+      .query(
+        `with total as (
+          select "parentType",
+                 count(*) as parent_count
+          from resolver
+          group by 1
+        )
+        select md5(row(r."parentType", r."fieldName")::text) as key,
+               r."parentType",
+               r."fieldName",
+               r."returnType",
+               parent_count,
+               round((count(*) * 100)::numeric / parent_count, 1) as usage
+        from resolver r, total
+        group by 2, 3, 4, 5;`
+      )
+      .then(res => res.rows);
   }
 }

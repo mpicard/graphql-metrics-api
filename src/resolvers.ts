@@ -4,8 +4,8 @@ export const resolvers = {
   Query: {
     allOperations: () => Operations.allOperations(),
     operation: (_, { id }) => Operations.get(id),
-    allTypes: () => Types.allTypes(),
-    trace: (_, { id }) => Traces.get(id)
+    trace: (_, { id }) => Traces.get(id),
+    allTypes: () => Types.allTypes()
   },
   Operation: {
     traces: ({ id }) => Traces.forOperation(id),
@@ -15,8 +15,5 @@ export const resolvers = {
   Trace: {
     startTime: trace => trace.start_time,
     endTime: trace => trace.end_time
-  },
-  Type: {
-    returnType: type => type.return_type
   }
 };
