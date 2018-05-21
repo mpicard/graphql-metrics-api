@@ -7,20 +7,32 @@ export class Types {
   static allTypes() {
     return db
       .query(
-        `with total as (
+        `with p as (
           select "parentType",
-                 count(*) as parent_count
+                  count(*) as parent_count
           from resolver
           group by 1
+        ), f as (
+          select "parentType",
+                  "fieldName",
+                  count(*) as field_count
+          from resolver
+          group by 1, 2
+        ), r as (
+          select "parentType",
+                  "fieldName",
+                  "returnType"
+          from resolver
+          group by 1, 2, 3
         )
-        select md5(row(r."parentType", r."fieldName")::text) as key,
-               r."parentType",
-               r."fieldName",
-               r."returnType",
-               parent_count,
-               round((count(*) * 100)::numeric / parent_count, 1) as usage
-        from resolver r, total
-        group by 2, 3, 4, 5;`
+        select md5(row(f."parentType", f."fieldName")::text) as key,
+                f."parentType",
+                f."fieldName",
+                r."returnType",
+                round((field_count * 100)::numeric / parent_count, 1) as usage
+        from p
+        join f on p."parentType" = f."parentType"
+        join r on f."parentType" = r."parentType" and f."fieldName" = r."fieldName";`
       )
       .then(res => res.rows);
   }
