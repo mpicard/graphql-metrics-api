@@ -8,11 +8,8 @@
     "declaration": false,
     "outDir": "lib",
     "noImplicitAny": false,
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "lib": ["es2016", "esnext.asynciterable"],
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
