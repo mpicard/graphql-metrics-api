@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -e ts -x 'ts-node -r dotenv/config src/index.ts'",
     "test": "jest --watch",
-    "postinstall": "tsc"
+    "postinstall": "tsc && cp src/schema.graphql lib"
   },
   "dependencies": {
     "apollo-server-express": "^1.3.6",
