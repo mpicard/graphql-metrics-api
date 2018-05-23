@@ -7,6 +7,7 @@ import { db } from './connectors';
 import { Operations, Resolvers, Traces } from './models';
 import { schema } from './schema';
 
+const port = process.env.PORT || 8000;
 const app = express();
 
 app.use(cors());
@@ -19,8 +20,8 @@ app.use('/graphql', graphqlExpress({ schema }));
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
-app.listen(8000, () => {
-  console.log('API started http://localhost:8000/graphiql');
+app.listen(port, () => {
+  console.log(`API started http://localhost:${port}/graphiql`);
   db
     .connect()
     .then(() => db.query(`create extension if not exists "uuid-ossp";`))
